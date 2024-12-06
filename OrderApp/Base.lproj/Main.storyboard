@@ -8,7 +8,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Restraunt-->
+        <!--Gwen's Diner-->
         <scene sceneID="ifF-2S-opD">
             <objects>
                 <tableViewController id="V6c-KO-jYk" customClass="CatageoryTableViewController" customModule="OrderApp" customModuleProvider="target" sceneMemberID="viewController">
@@ -34,7 +34,7 @@
                             <outlet property="delegate" destination="V6c-KO-jYk" id="rd7-iD-x1I"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Restraunt" id="dyt-8B-yqr"/>
+                    <navigationItem key="navigationItem" title="Gwen's Diner" id="dyt-8B-yqr"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="EwH-nE-Oqx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
