@@ -26,6 +26,8 @@ enum MenuControllerError: Error, LocalizedError, CustomStringConvertible {
 }
 
 class MenuController {
+	static let shared: MenuController = .init()
+	
 	let baseURL: URL = .init(string: "http://localhost:8080/")!
 	typealias MinutesToPrepare = Int
 	typealias ID = Int
@@ -46,7 +48,7 @@ class MenuController {
 		return categoriesResponse.categories
 	}
 	
-	func fetchmenuItems(forCategory categoryName: String) async throws -> [MenuItem] {
+	func fetchMenuItems(forCategory categoryName: String) async throws -> [MenuItem] {
 		let baseMenuURL: URL = baseURL.appendingPathComponent("menu")
 		var components: URLComponents = .init(url: baseMenuURL, resolvingAgainstBaseURL: true)!
 		

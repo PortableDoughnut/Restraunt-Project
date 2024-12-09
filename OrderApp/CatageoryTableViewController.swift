@@ -17,8 +17,7 @@ class CatageoryTableViewController: UITableViewController {
 		
 		Task.init {
 			do {
-				let categories = try await menuController.fetchCategories()
-				updateUI(with: categories)
+				let categories = try await MenuController.shared.fetchCategories()
 			} catch {
 				displayError(error, title: "Failed to Fetch Categories")
 			}
