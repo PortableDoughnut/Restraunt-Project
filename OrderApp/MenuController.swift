@@ -27,7 +27,13 @@ enum MenuControllerError: Error, LocalizedError, CustomStringConvertible {
 
 class MenuController {
 	static let shared: MenuController = .init()
+	static let orderUpdatedNotification = Notification.Name("MenuController.orderUpdated")
 	
+	var order: Order = .init() {
+		didSet {
+			NotificationCenter.default.post(name: MenuController.orderUpdatedNotification, object: nil)
+		}
+	}
 	let baseURL: URL = .init(string: "http://localhost:8080/")!
 	typealias MinutesToPrepare = Int
 	typealias ID = Int

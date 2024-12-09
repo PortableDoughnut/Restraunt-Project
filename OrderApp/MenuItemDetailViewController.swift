@@ -50,6 +50,8 @@ class MenuItemDetailViewController: UIViewController {
 		},
 			completion: nil
 		)
+		
+		MenuController.shared.order.menuItems.append(menuItem)
 	}
 	
 	/*
