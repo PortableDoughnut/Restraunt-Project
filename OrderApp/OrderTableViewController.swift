@@ -22,9 +22,6 @@ class OrderTableViewController: UITableViewController {
 			name: MenuController.orderUpdatedNotification,
 			object: nil)
 		
-			// Uncomment the following line to preserve selection between presentations
-			// self.clearsSelectionOnViewWillAppear = false
-		
 		self.navigationItem.leftBarButtonItem = self.editButtonItem
 	}
 	
@@ -49,7 +46,7 @@ class OrderTableViewController: UITableViewController {
 					self.performSegue(withIdentifier: "confirmOrder", sender: nil)
 				}
 			} catch {
-				print("Error: \(error)") // Log the error details
+				print("Error: \(error)")
 				displayError(error, title: "Order Submission Failed")
 			}
 		}
@@ -118,7 +115,9 @@ class OrderTableViewController: UITableViewController {
 	}
 	
 	@IBAction func unwindToOrder(for unwindSegue: UIStoryboardSegue, towards subsequentVC: UIViewController) {
-		
+		if unwindSegue.identifier == "unwindToOrder" {
+			MenuController.shared.order.menuItems.removeAll()
+		}
 	}
 	
 	@IBAction func submitPressed(_ sender: UIBarButtonItem) {
