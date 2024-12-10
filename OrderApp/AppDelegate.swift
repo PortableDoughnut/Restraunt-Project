@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -13,7 +14,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 	func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-		// Override point for customization after application launch.
+		let temporaryDirectory = NSTemporaryDirectory()
+		let urlCache: URLCache = .init(
+			memoryCapacity: 25_000_000,
+			diskCapacity: 50_000_000,
+			diskPath: temporaryDirectory
+		)
+		
 		return true
 	}
 

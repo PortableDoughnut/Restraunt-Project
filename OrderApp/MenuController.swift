@@ -17,12 +17,15 @@ enum MenuControllerError: Error, LocalizedError, CustomStringConvertible {
 				"Could not find menu items"
 			case .orderRequestFailed:
 				"Order Request Failed"
+			case .imageDataMissing:
+				"Image data missing"
 		}
 	}
 	
 	case categoriesNotFound
 	case menuItemsNotFound
 	case orderRequestFailed
+	case imageDataMissing
 }
 
 class MenuController {
@@ -73,6 +76,21 @@ class MenuController {
 		let menuResponse = try decoder.decode(MenuResponse.self, from: data)
 		
 		return menuResponse.items
+	}
+	
+	func fetchImage(from url: URL) async throws -> UIImage {
+		let (data, response) = try await URLSession.shared.data(from: url)
+		
+		guard let httpResponse = response as? HTTPURLResponse,
+			  httpResponse.statusCode == 200
+		else {
+			throw MenuControllerError.imageDataMissing
+		}
+		
+		guard let image: UIImage = .init(data: data)
+		else { throw MenuControllerError.imageDataMissing }
+		
+		return image
 	}
 	
 	func submitOrder(forMenuIDs menuIDs: [ID]) async throws -> MinutesToPrepare {

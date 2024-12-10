@@ -13,7 +13,7 @@ struct MenuItem: Codable {
 	let name: String
 	let detailText: String
 	let category: String
-	let imageURL: String
+	let imageURL: URL
 	let price: Double
 	
 	enum CodingKeys: String, CodingKey {

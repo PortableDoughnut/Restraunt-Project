@@ -11,6 +11,7 @@ class MenuTableViewController: UITableViewController {
 	let category: String
 	let menuController: MenuController = .init()
 	var menuItems: [MenuItem] = .init()
+	var imageLoadTasks: [IndexPath: Task<Void, Never>] = [:]
 	
 	init?(coder: NSCoder, category: String) {
 		self.category = category
@@ -49,41 +50,49 @@ class MenuTableViewController: UITableViewController {
 	}
 	
 	func configure(_ cell: UITableViewCell, forItemAt indexPath: IndexPath) {
+		guard let cell = cell as? MenuItemCell else { return }
+		
 		let menuItem = menuItems[indexPath.row]
 		
 		var content = cell.defaultContentConfiguration()
 		content.text = menuItem.name
 		content.secondaryText = menuItem.price.formatted(.currency(code: "usd"))
-		cell.contentConfiguration = content
+		content.image = nil
+		
+		imageLoadTasks[indexPath] = Task.init {
+			if let image = try? await MenuController.shared.fetchImage(from: menuItem.imageURL) {
+				if let currentIndexPath = tableView.indexPath(for: cell),
+				   currentIndexPath == indexPath {
+					cell.itemName = menuItem.name
+					cell.price = menuItem.price
+					cell.image = image
+				}
+			}
+			imageLoadTasks[indexPath] = nil
+		}
 	}
 	
   // MARK: - Table view data source
-
-  override func numberOfSections(in tableView: UITableView) -> Int { 1 }
-
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-	  menuItems.count
-  }
-
-	 override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		 let cell = tableView.dequeueReusableCell(withIdentifier: "MenuItem", for: indexPath)
-
-		 configure(cell, forItemAt: indexPath)
-
-		 return cell
-	 }
-
-
-  /*
-	 // MARK: - Navigation
-
-	 // In a storyboard-based application, you will often want to do a little preparation before navigation
-	 override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-		 // Get the new view controller using segue.destination.
-		 // Pass the selected object to the new view controller.
-	 }
-	 */
 	
+	override func numberOfSections(in tableView: UITableView) -> Int { 1 }
+	
+	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+	menuItems.count
+}
+
+	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+		let cell = tableView.dequeueReusableCell(withIdentifier: "MenuItem", for: indexPath)
+
+		configure(cell, forItemAt: indexPath)
+
+		return cell
+	}
+	
+	override func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+		imageLoadTasks[indexPath]?.cancel()
+		imageLoadTasks.forEach { key, value in value.cancel() }
+	}
+
 	@IBSegueAction func showMenuItem(_ coder: NSCoder, sender: Any?) -> MenuItemDetailViewController? {
 		guard let cell = sender as? UITableViewCell,
 			  let indexPath = tableView.indexPath(for: cell)
