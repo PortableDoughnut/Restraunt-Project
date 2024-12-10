@@ -9,19 +9,16 @@ import Foundation
 import UIKit
 
 struct MenuItem: Codable {
-	var id: Int
-	var name: String
-	var detailText: String
-	var price: Double
-	var category: String
-	var imageURL: URL
+	let id: Int
+	let name: String
+	let detailText: String
+	let category: String
+	let imageURL: String
+	let price: Double
 	
 	enum CodingKeys: String, CodingKey {
-		case id
-		case name
+		case id, name, category, price
 		case detailText = "description"
-		case price
-		case category
 		case imageURL = "image_url"
 	}
 }

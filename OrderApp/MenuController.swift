@@ -66,7 +66,7 @@ class MenuController {
 		guard let httpResponse = response as? HTTPURLResponse,
 			  httpResponse.statusCode == 200
 		else {
-			throw MenuControllerError.orderRequestFailed
+			throw MenuControllerError.menuItemsNotFound
 		}
 		
 		let decoder: JSONDecoder = .init()
@@ -78,7 +78,6 @@ class MenuController {
 	func submitOrder(forMenuIDs menuIDs: [ID]) async throws -> MinutesToPrepare {
 			let orderURL: URL = baseURL.appendingPathComponent("order")
 			var request: URLRequest = .init(url: orderURL)
-			
 			request.httpMethod = "POST"
 			request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 			
@@ -87,8 +86,10 @@ class MenuController {
 			let jsonData = try? jsonEncoder.encode(menuIdsDictionary)
 			
 			request.httpBody = jsonData
-			
 			let (data, response) = try await URLSession.shared.data(for: request)
+		if let jsonString = String(data: data, encoding: .utf8) {
+			print(jsonString)
+		}
 			
 			guard let httpResponse = response as? HTTPURLResponse,
 				  httpResponse.statusCode == 200
@@ -97,8 +98,10 @@ class MenuController {
 			}
 			
 			let decoder: JSONDecoder = .init()
+		
 			let orderResponse = try decoder.decode(OrderResponse.self, from: data)
+		
 			
-			return orderResponse.prepTime
+		return orderResponse.prepTime
 	}
 }

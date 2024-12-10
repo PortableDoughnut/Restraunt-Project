@@ -213,11 +213,76 @@
                             <outlet property="delegate" destination="mOj-0r-vSM" id="f8x-cM-QiG"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="My Order" id="Quk-NJ-3rP"/>
+                    <navigationItem key="navigationItem" title="My Order" id="Quk-NJ-3rP">
+                        <barButtonItem key="rightBarButtonItem" title="Submit" id="fy8-5m-3Va">
+                            <connections>
+                                <action selector="submitPressed:" destination="mOj-0r-vSM" id="ner-dP-0VC"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="NGk-PP-EhB" kind="presentation" identifier="confirmOrder" destinationCreationSelector="confirmOrder:" id="Rlh-xF-rFx"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="rjo-9a-m0B" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1015" y="625"/>
+        </scene>
+        <!--Order Confirmation View Controller-->
+        <scene sceneID="rhD-PR-YFK">
+            <objects>
+                <viewController id="NGk-PP-EhB" customClass="OrderConfirmationViewController" customModule="OrderApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="DfN-uM-SkG">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Thank you for your order!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TPx-Bo-PpG">
+                                <rect key="frame" x="15.666666666666657" y="336.66666666666669" width="362" height="40.666666666666686"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle0"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Your food will be ready soon!" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ucr-tS-gFv">
+                                <rect key="frame" x="87.000000000000014" y="385.33333333333331" width="219.33333333333337" height="20.333333333333314"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XAo-pI-H3O">
+                                <rect key="frame" x="0.0" y="734" width="393" height="44"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="44" id="317-0c-T0s"/>
+                                </constraints>
+                                <state key="normal" title="Button"/>
+                                <buttonConfiguration key="configuration" style="plain" title="Dismiss"/>
+                                <connections>
+                                    <segue destination="3FP-7f-kJH" kind="unwind" unwindAction="unwindToOrderFor:towards:" id="6Fi-Vq-vrG"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="4Mq-Hs-G3Q"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="XAo-pI-H3O" firstAttribute="leading" secondItem="4Mq-Hs-G3Q" secondAttribute="leading" id="9aQ-3G-QmT"/>
+                            <constraint firstItem="TPx-Bo-PpG" firstAttribute="centerY" secondItem="DfN-uM-SkG" secondAttribute="centerY" constant="-64" id="L4O-5D-3fE"/>
+                            <constraint firstItem="ucr-tS-gFv" firstAttribute="centerX" secondItem="DfN-uM-SkG" secondAttribute="centerX" id="Lsi-lh-u39"/>
+                            <constraint firstItem="TPx-Bo-PpG" firstAttribute="centerX" secondItem="DfN-uM-SkG" secondAttribute="centerX" id="QTx-4m-uZs"/>
+                            <constraint firstItem="4Mq-Hs-G3Q" firstAttribute="bottom" secondItem="XAo-pI-H3O" secondAttribute="bottom" constant="64" id="bP2-hc-G1U"/>
+                            <constraint firstItem="ucr-tS-gFv" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4Mq-Hs-G3Q" secondAttribute="leading" id="t80-3K-U1S"/>
+                            <constraint firstItem="4Mq-Hs-G3Q" firstAttribute="trailing" secondItem="XAo-pI-H3O" secondAttribute="trailing" id="v4z-aG-FCc"/>
+                            <constraint firstItem="4Mq-Hs-G3Q" firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="ucr-tS-gFv" secondAttribute="trailing" id="zMz-Gi-UlE"/>
+                            <constraint firstItem="ucr-tS-gFv" firstAttribute="top" secondItem="TPx-Bo-PpG" secondAttribute="bottom" constant="8" id="zTH-Ge-rb9"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="0E3-0S-lVr"/>
+                    <connections>
+                        <outlet property="confirmLabel" destination="ucr-tS-gFv" id="Owf-Ox-G7N"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="BM6-F4-LXx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="3FP-7f-kJH" userLabel="Exit" sceneMemberID="exit"/>
+            </objects>
+            <point key="canvasLocation" x="1727" y="625"/>
         </scene>
         <!--My Order-->
         <scene sceneID="ENP-sG-efd">

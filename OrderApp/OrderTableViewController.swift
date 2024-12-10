@@ -11,6 +11,8 @@ class OrderTableViewController: UITableViewController {
 	
 	var order: Order = .init()
 	
+	var minutesToPrepareOrder: Int = 0
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		
@@ -23,7 +25,7 @@ class OrderTableViewController: UITableViewController {
 			// Uncomment the following line to preserve selection between presentations
 			// self.clearsSelectionOnViewWillAppear = false
 		
-		self.navigationItem.rightBarButtonItem = self.editButtonItem
+		self.navigationItem.leftBarButtonItem = self.editButtonItem
 	}
 	
 	func configure(_ cell: UITableViewCell, forItemAt indexPath: IndexPath) {
@@ -33,6 +35,38 @@ class OrderTableViewController: UITableViewController {
 		content.text = menuItem.name
 		content.secondaryText = menuItem.price.formatted(.currency(code: "usd"))
 		cell.contentConfiguration = content
+	}
+	
+	func uploadOrder() {
+		let menuIds = MenuController.shared.order.menuItems.map { $0.id }
+		
+		Task.init {
+			do {
+				let minutesToPrepare = try await MenuController.shared.submitOrder(forMenuIDs: menuIds)
+				print("Preparation time: \(minutesToPrepare)")
+				minutesToPrepareOrder = minutesToPrepare
+				DispatchQueue.main.async {
+					self.performSegue(withIdentifier: "confirmOrder", sender: nil)
+				}
+			} catch {
+				print("Error: \(error)") // Log the error details
+				displayError(error, title: "Order Submission Failed")
+			}
+		}
+	}
+	
+	func displayError(_ error: Error, title: String) {
+		guard let _ = viewIfLoaded?.window else { return }
+		let alert: UIAlertController = .init(
+			title: title,
+			message: error.localizedDescription,
+			preferredStyle: .alert
+		)
+		alert.addAction(.init(title: "Dismiss",
+							  style: .default,
+							  handler: nil))
+		
+		self.present(alert, animated: true, completion: nil)
 	}
 	
 		// MARK: - Table view data source
@@ -81,5 +115,34 @@ class OrderTableViewController: UITableViewController {
 		 }
 		 */
 		
+	}
+	
+	@IBAction func unwindToOrder(for unwindSegue: UIStoryboardSegue, towards subsequentVC: UIViewController) {
+		
+	}
+	
+	@IBAction func submitPressed(_ sender: UIBarButtonItem) {
+		print("Submit button pressed!")
+		
+		let orderTotal: Double = MenuController.shared.order.menuItems.reduce(0) { $0 + $1.price }
+		let formattedTotal = orderTotal.formatted(.currency(code: "usd"))
+		
+		let alertController = UIAlertController(
+			title: "Confirm Order",
+			message: "You are about to submit your order with a total of \(formattedTotal)",
+			preferredStyle: .actionSheet
+		)
+		
+		alertController.addAction(UIAlertAction(title: "Submit", style: .default, handler: { _ in
+			print("Submit action triggered!")
+			self.uploadOrder()
+		}))
+		
+		alertController.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+		
+		present(alertController, animated: true, completion: nil)
+	}
+	@IBSegueAction func confirmOrder(_ coder: NSCoder) -> OrderConfirmationViewController? {
+		OrderConfirmationViewController(coder: coder, minutesToPrepare: minutesToPrepareOrder)
 	}
 }
