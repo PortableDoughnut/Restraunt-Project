@@ -8,10 +8,13 @@
 import UIKit
 
 extension URL {
-	var toImage: UIImage {
-		guard let data = try? Data(contentsOf: self)
-		else { return UIImage.init(systemName: "exclamationmark.triangle.fill")! }
-		
-		return .init(data: data) ?? UIImage.init(systemName: "exclamationmark.triangle.fill")!
+	func toImage() async -> UIImage? {
+		do {
+			let (data, response) = try await URLSession.shared.data(from: self)
+			return  UIImage(data: data)
+		} catch {
+			print(error)
+			return nil
+		}
 	}
 }

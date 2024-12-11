@@ -35,6 +35,8 @@ class MenuTableViewController: UITableViewController {
 				displayError(error, title: "Filed to Fetch Menu Items for \(self.category)")
 			}
 		}
+		
+		tableView.rowHeight = 90
   }
 
 	func updateUI(with menuItems: [MenuItem]) {
