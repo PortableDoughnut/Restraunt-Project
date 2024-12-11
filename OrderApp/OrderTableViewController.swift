@@ -33,6 +33,20 @@ class OrderTableViewController: UITableViewController {
 		content.secondaryText = menuItem.price.formatted(.currency(code: "usd"))
 		content.image = UIImage(systemName: "photo.on.rectangle")
 		cell.contentConfiguration = content
+		
+		Task.init {
+			if let image = try? await
+				MenuController.shared.fetchImage(from: menuItem.imageURL) {
+				if let currentIndexPath = self.tableView?.indexPath(for: cell),
+				   currentIndexPath == indexPath {
+					var content = cell.defaultContentConfiguration()
+					content.text = menuItem.name
+					content.secondaryText = menuItem.price.formatted(.currency(code: "usd"))
+					content.image = image.preparingThumbnail(of: CGSize(width: 80, height: 80))
+					cell.contentConfiguration = content
+				}
+			}
+		}
 	}
 	
 	func uploadOrder() {
